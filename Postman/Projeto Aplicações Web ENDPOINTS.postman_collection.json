@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "6728308a-6d38-45ca-af62-5180b77b9bae",
+		"name": "Projeto Aplicações Web ENDPOINTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17170954"
+	},
+	"item": [
+		{
+			"name": "getBestGasStations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:80/api/bestGasStation/:id/:r/:n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"bestGasStation",
+						":id",
+						":r",
+						":n"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "r",
+							"value": "2.5"
+						},
+						{
+							"key": "n",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "newRouteWithoutTrafficCongestion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:80/api/rWithoutTrafficCongestion/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"rWithoutTrafficCongestion",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

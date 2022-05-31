@@ -1,0 +1,68 @@
+<div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-between">
+  <div class="mb10" fxFlex="24" fxFlex.lt-lg="49">
+    <mat-card class = "danger" >
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon class="icon-lg">{{icon}}</mat-icon>
+        </div>
+        <mat-card-title > {{teste[0]}}</mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-button class="float-right" (click)="listPlatesRpmZero()">Ver Dados</button>
+      </mat-card-actions>
+      <div *ngIf="showRpmzero"><mat-card-content>
+        <li *ngFor="let t of rzero; index as i; first as isFirst">
+         {{rzero[i].plate}} 
+        </li>
+      </mat-card-content></div>
+      
+    </mat-card>
+    
+  </div>
+  <div class="mb10" fxFlex="24" fxFlex.lt-lg="49">
+    <mat-card class = "warn" >
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon class="icon-lg">{{icon}}</mat-icon>
+        </div>
+        <mat-card-title > {{teste[1]}}</mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-button class="float-right" (click)="listPlatesRpmMid()">Ver Dados</button>
+      </mat-card-actions>
+      <div *ngIf="showRpmmid"><mat-card-content>
+        <li *ngFor="let t of rmid; index as i; first as isFirst">
+         {{t[i].plate}} 
+        </li>
+      </mat-card-content></div>
+      
+    </mat-card>
+    
+  </div>
+  <div class="mb10" fxFlex="24" fxFlex.lt-lg="49">
+    <mat-card class = "success" >
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon class="icon-lg">{{icon}}</mat-icon>
+        </div>
+        <mat-card-title > {{teste[2]}}</mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-button class="float-right" (click)="listPlatesRpmRun()">Ver Dados</button>
+      </mat-card-actions>
+      <div *ngIf="showRpmrun"><mat-card-content>
+        <li *ngFor="let t of rrun; index as i; first as isFirst">
+         {{t[i].plate}} 
+        </li>
+      </mat-card-content></div>
+      
+    </mat-card>
+    
+  </div>
+  
+    
+</div>
+

@@ -1,0 +1,172 @@
+package controllers
+
+import (
+	"fmt"
+	"strconv"
+
+	"io"
+
+	"net/http"
+
+	"github.com/gestaoFrota/model"
+	"github.com/gestaoFrota/services"
+	"github.com/gin-gonic/gin"
+	"github.com/otiai10/gosseract/v2"
+)
+
+type Post struct {
+	Text string
+}
+
+//func to upload file
+func UploadFile(c *gin.Context) {
+	var supply model.Supply
+	
+	supply.TruckId = c.Request.FormValue("truck_id")
+	supply.DriverId = c.Request.FormValue("driver_id")
+
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("file err : %s", err.Error()))
+		return
+	}
+
+	if header != nil {
+		fmt.Printf("teste")
+
+	}
+	client := gosseract.NewClient()
+	defer client.Close()
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "deu erro"})
+		return
+	}
+	client.SetImageFromBytes(bytes)
+	text, _ := client.Text()
+	fmt.Printf("JSON")
+	fmt.Printf(text)
+	c.JSON(http.StatusOK, gin.H{"text": text})
+}
+
+func CreateSupply(c *gin.Context) {
+	var supply model.Supply
+
+	if err := c.BindJSON(&supply); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Bad request!"})
+		return
+	}
+
+	services.OpenDatabase()
+	services.Db.Save(&supply)
+	defer services.Db.Close()
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Sucesso!"})
+
+}
+
+// Lista apenas os camionistas que tem camioes associados
+
+func ListTrucksDrivers(c *gin.Context) {
+	var truckAndDriver []model.TruckAndDriver
+	var users []model.Users
+	var truckDrivers []model.Users
+
+	services.OpenDatabase()
+	services.Db.Find(&users)
+	defer services.Db.Close()
+	services.OpenDatabase()
+	services.Db.Find(&truckAndDriver)
+	defer services.Db.Close()
+
+	for i := 0; i < len(users); i++ {
+		if users[i].RoleId == 4 { // verifica se o cargo do user é camionista
+			for x := 0; x < len(truckAndDriver); x++ {
+				if users[i].ID == (uint)(truckAndDriver[x].FirstDriverId) {
+					truckDrivers = append(truckDrivers, users[i])
+				}
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!", "truckDriver": truckDrivers})
+}
+
+func ListTrailers(c *gin.Context) {
+	var trailers []model.Trailer
+	services.OpenDatabase()
+	services.Db.Find(&trailers)
+
+	if len(trailers) <= 0 {
+		defer services.Db.Close()
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
+		return
+	}
+	defer services.Db.Close()
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "trailer": trailers})
+
+}
+
+func ListTruckAndDriver(c *gin.Context) {
+	var trailers []model.TruckAndDriver
+	services.OpenDatabase()
+	services.Db.Find(&trailers)
+
+	if len(trailers) <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
+		return
+	}
+	defer services.Db.Close()
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": trailers})
+
+}
+
+func CreateDisplacement(c *gin.Context) {
+	var truckAndDriver model.TruckAndDriver
+	var trailer model.Trailer
+	var displacement model.Displacements
+	var data struct {
+		Coords          string  `gorm:"not null" json:"coords"`
+		TruckDriver     uint    `gorm:"not null" json:"truck_driver"`
+		TrailerPlate    string  `json:"trailer_plate"`
+		Distance        float64 `json:distance`
+		Time            string  `json:"time"`
+		StartCountry    string  `json:"start_country"`
+		StartCity       string  `json:"start_city"`
+		StartPostalCode string  `json:"start_postal_code"`
+		StartAddress    string  `json:"start_address"`
+		EndCountry      string  `json:"end_country"`
+		EndCity         string  `json:"end_city"`
+		EndPostalCode   string  `json:"end_postal_code"`
+		EndAddress      string  `json:"end_address"`
+	}
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Bad request!"})
+		return
+	}
+
+	services.OpenDatabase()
+	services.Db.Find(&truckAndDriver, "first_driver_id = ?", data.TruckDriver)
+	defer services.Db.Close()
+	services.OpenDatabase()
+	services.Db.Find(&trailer, "plate = ?", data.TrailerPlate)
+
+	//aux = data.Distance;
+	displacement.Coords = data.Coords
+	displacement.TrailerId = trailer.ID
+	displacement.TruckId = truckAndDriver.TruckId
+	displacement.Distance = data.Distance
+	displacement.StartAddress = data.StartAddress
+	displacement.StartCity = data.StartCity
+	displacement.StartCountry = data.StartCountry
+	displacement.StartPostalCode = data.StartPostalCode
+	displacement.EndAddress = data.EndAddress
+	displacement.EndCity = data.EndCity
+	displacement.EndCountry = data.EndCountry
+	displacement.EndPostalCode = data.EndPostalCode
+	displacement.Time = data.Time
+
+	services.Db.Save(&displacement)
+
+	defer services.Db.Close()
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Sucesso!"})
+}

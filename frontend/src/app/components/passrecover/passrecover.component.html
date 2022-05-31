@@ -1,0 +1,36 @@
+<div class="login-page">
+   <div class="content px20">
+      <div class="login-form">
+         <form [formGroup]="validationForm" (ngSubmit)="onSubmit()">
+            <div class="text-center">
+               <h2 class="app-name">Repor Password</h2>
+            </div>
+            <div fxLayout="row">
+               <div fxFlexFill>
+               <mat-form-field class="w-100">
+                  <input matInput mdbValidate formControlName="email" minLength="8" maxLength="30" type="email" class="form-control" id="formemail" placeholder="Email">
+               </mat-form-field>
+               </div>
+            </div>
+            <div fxLayout="row">
+               <div fxFlexFill>
+               <button type="submit" mat-raised-button color="primary" class="w-100">Repor</button>
+               </div>
+            </div>
+         </form>
+         <div fxFlexFill>
+            <a type="submit" href="login" mat-raised-button color="primary" class="w-100">Voltar</a>
+         </div>
+         <mat-dialog-content class="error">
+            <mat-error *ngIf="passwordChange === 'false'">Email não existe</mat-error>
+         </mat-dialog-content>
+         <div *ngIf="passwordChange === 'true'">
+            <p class="success">
+               <strong>Sucesso!</strong> Por favor verifique o seu e-mail!
+           </p>
+         </div>
+      </div>
+   </div>
+ </div>
+ 
+ 

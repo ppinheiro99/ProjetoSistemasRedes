@@ -1,0 +1,487 @@
+<section id="sample-table" class="mat-elevation-z8 bg-white">
+  <h1>Camiões</h1>
+  <div></div>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource" matSort class="w-100">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="plate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricula </th>
+      <td mat-cell *matCellDef="let row"> {{row.plate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ano </th>
+      <td mat-cell *matCellDef="let row"> {{row.year}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="month">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Mês </th>
+      <td mat-cell *matCellDef="let row"> {{row.month}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="km">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quilometros </th>
+      <td mat-cell *matCellDef="let row"> {{row.km}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="brand">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Marca </th>
+      <td mat-cell *matCellDef="let row"> {{row.brand}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="button">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button  class = "delete" (click)="deleteTruck(row.ID)" mat-flat-button color="warn"><span class="material-icons">
+          delete
+          </span></button>
+     </td>
+    </ng-container>
+
+    <ng-container matColumnDef="update">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="editar"  (click)="editTruck(row.ID)" mat-flat-button  ><span class="material-icons">
+          edit
+          </span></button>
+     </td>
+    </ng-container>
+
+    <ng-container matColumnDef="associate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="associar"  (click)="assocCamionistaform(row.ID)" mat-flat-button  ><span class="material-icons">
+          person_add
+          </span></button>
+     </td>
+    </ng-container>
+
+    <ng-container matColumnDef="camionistas">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="camionistas"  (click)="showCamionistasTable(row.ID)" mat-flat-button  ><span class="material-icons">
+          group
+        </span></button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="addRoute">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="addRoute" (click)="addRoute(row.ID)" mat-flat-button  ><span class="material-icons">
+          alt_route
+          </span></button>
+     </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+</section>
+
+<div class="example-button-row">
+  <button  mat-raised-button (click)="openDialog()" mat-raised-button color="primary">Adicionar</button>
+</div>
+
+<div *ngIf="dialog">
+  <div>
+    <div class="register">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+          <mat-card fxFlex.gt-xs="40" class="mb15">
+            <mat-card-header>
+              <mat-card-title>Adicionar Camião</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="">
+              <form class="example-form" [formGroup]="validationForm" (ngSubmit)="insertTruck()">
+                <label>
+                  Matricula
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate  [required]="true" formControlName="plate" minLength="6" maxLength="8" type="text" class="form-control" class="form-control" id="plate" placeholder="00-AA-00">
+                </mat-form-field>
+                <label>
+                  Ano
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate formControlName="year" [required]="true" minLength="4" maxLength="4" type="number" class="form-control" id="year"  placeholder="2000">
+                </mat-form-field>
+                <label>
+                  Mês
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate formControlName="month" [required]="true" minLength="1" maxLength="2" type="number" class="form-control" id="month"  placeholder="1">
+                </mat-form-field>
+                <label>
+                  Quilometros
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate formControlName="km" [required]="true" minLength="1" maxLength="10" type="number" class="form-control" id="km"  placeholder="1">
+                </mat-form-field>
+                <label>
+                  Marca
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate formControlName="brand" [required]="true" minLength="1" maxLength="20" type="text" class="form-control" id="brand"  placeholder="Ex: Volvo">
+                </mat-form-field>
+                <mat-dialog-content class="error">
+                  <mat-error *ngIf="plateFailed">Matricula Invalida\Já Existe!</mat-error>
+                  <mat-error *ngIf="yearFailed">Mês ou Ano Invalido!</mat-error>
+                </mat-dialog-content>
+                  <div class="example-button-row">
+                    <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                  </div>
+              </form>
+              <button mat-button  (click)="closeDialog()">Fechar</button>
+            </mat-card-content>
+          </mat-card>
+      </div>
+    </div>          
+  </div>
+</div>
+
+<div *ngIf="editForm">
+  <div>
+    <div class="register">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+          <mat-card fxFlex.gt-xs="40" class="mb15">
+            <mat-card-header>
+              <mat-card-title>Editar Camião</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="">
+              <label>
+                ID do Camião
+                </label>
+              <form class="example-form" [formGroup]="validationForm" (ngSubmit)="confirmEditTruck()">
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="truck_id" [readonly]="true"  formControlName="id_editTruck" minLength="6" maxLength="8" type="text"  class="form-control" id="id_editTruck" [disabled]="true">
+                </mat-form-field>
+                <label>
+                  Matricula
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="plate_edit" [required]="true" formControlName="plate_editTruck" minLength="6" maxLength="8" type="text"  class="form-control" id="plate_editTruck" placeholder="00-AA-00">
+                </mat-form-field>
+                <label>
+                  Ano
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="year_edit" formControlName="year_editTruck" [required]="true" minLength="4" maxLength="4" type="number" class="form-control" id="year_editTruck"  placeholder="2000">
+                </mat-form-field>
+                <label>
+                  Mês
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="month_edit" formControlName="month_editTruck" [required]="true" minLength="1" maxLength="2" type="number" class="form-control" id="month_editTruck"  placeholder="1">
+                </mat-form-field>
+                <label>
+                  Quilometros
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="km_edit" formControlName="km_editTruck" [required]="true" minLength="1" maxLength="10" type="number" class="form-control" id="km_editTruck"  placeholder="1">
+                </mat-form-field>
+                <label>
+                  Marca
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="brand_edit" formControlName="brand_editTruck" [required]="true" minLength="1" maxLength="20" type="text" class="form-control" id="brand_editTruck"  placeholder="Ex: Volvo">
+                </mat-form-field>
+                <mat-dialog-content class="error">
+                  <mat-error *ngIf="plateFailed">Matricula Invalida\Já Existe!</mat-error>
+                  <mat-error *ngIf="yearFailed">Mês ou Ano Invalido!</mat-error>
+                 </mat-dialog-content>
+                  <div class="example-button-row">
+                    <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                  </div>
+              </form>
+              <button mat-button  (click)="closeEdit()">Fechar</button>
+            </mat-card-content>
+          </mat-card>
+      </div>
+    </div>          
+  </div>
+</div>
+<div *ngIf="assocCamionista">
+  <section id="sample-table" class="mat-elevation-z8 bg-white">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+    </mat-form-field>
+    <table mat-table [dataSource]="dataUserSource" matSort class="w-100">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ID">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+      </ng-container>
+        
+      <ng-container matColumnDef="first_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+        <td mat-cell *matCellDef="let row"> {{row.first_name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="last_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </th>
+        <td mat-cell *matCellDef="let row"> {{row.last_name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="role_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargo </th>
+        <td mat-cell *matCellDef="let row">
+          <div *ngIf="row.role_id == 1"> Super Admin </div>
+          <div *ngIf="row.role_id == 2"> Admin </div>
+          <div *ngIf="row.role_id == 3"> Chefe Trafego </div>
+          <div *ngIf="row.role_id == 4"> Camionista </div>
+          <div *ngIf="row.role_id == 5"> Mecanico </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="bind">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let row"> 
+          <button class="editar" (click)="bindTruckAndDriver(row.ID,idTruck)" mat-flat-button  ><span class="material-icons">
+            add
+            </span></button>
+        </td>
+      </ng-container>                
+      <tr mat-header-row *matHeaderRowDef="displayedUserColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedUserColumns;" (click)="selection.toggle(row)"></tr>
+    </table>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </section>        
+</div>
+<div *ngIf="showCamionistas">
+  <div>
+    <div class="register">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+          <mat-card fxFlex.gt-xs="40" class="mb15">
+            <mat-card-header>
+              <mat-card-title>Camionistas</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="">                  
+                <p>
+                    Matricula: {{dataTruckDriverSource.truck_plate}}
+                </p>
+                <p>
+                  Primeiro Condutor: {{dataTruckDriverSource.truck_first}}
+                  <button mat-button  (click)="removerCamionista(dataTruckDriverSource.truck_firstId)"><span class="material-icons">
+                    delete
+                    </span></button>
+                </p>
+                <p>
+                  Segundo Condutor:  {{dataTruckDriverSource.truck_second}}
+                  <button mat-button  (click)="removerCamionista(dataTruckDriverSource.truck_secondId)"><span class="material-icons">
+                    delete
+                    </span></button>
+                </p>                                     
+              <button mat-button  (click)="closeDesassociar()">Fechar</button>
+            </mat-card-content>
+          </mat-card>
+      </div>
+    </div>                
+  </div>
+</div>
+<div *ngIf="addRouteDialog">
+  <div class="addRoute">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+        <mat-card fxFlex.gt-xs="40" class="mb15">
+          <mat-card-header>
+            <mat-card-title>Adicionar Rotas </mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="">
+            <form class="example-form" [formGroup]="validationForm" (ngSubmit)="insertRoute()">
+              <label>
+                Latitude
+                </label>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate  [required]="true" formControlName="latitudeRoute" type="number" class="form-control" class="form-control" id="latitudeRoute" placeholder="Latitude">
+              </mat-form-field>
+              <label>
+                Longitude
+                </label>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate formControlName="longitudeRoute" [required]="true" type="number" class="form-control" id="longitudeRoute"  placeholder="Longitude">
+              </mat-form-field>
+                <div class="example-button-row">
+                  <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- TRAILER -->
+
+<section id="sample-table" class="mat-elevation-z8 bg-white">
+    <h1>Reboques</h1>
+    <div></div>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSourceTrailer" matSort class="w-100">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selectionTrailer.hasValue() && isAllSelected()" [indeterminate]="selectionTrailer.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionTrailer.toggle(row) : null" [checked]="selectionTrailer.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="plate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Matricula </th>
+      <td mat-cell *matCellDef="let row"> {{row.plate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ano </th>
+      <td mat-cell *matCellDef="let row"> {{row.year}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="button">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button  class = "delete" (click)="deleteTrailer(row.ID)" mat-flat-button color="warn"><span class="material-icons">
+          delete
+          </span></button>
+     </td>
+    </ng-container>
+
+    <ng-container matColumnDef="update">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="editar"  (click)="editTrailer(row.ID)" mat-flat-button  ><span class="material-icons">
+          edit
+          </span></button>
+     </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedTrailerColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedTrailerColumns;" (click)="selectionTrailer.toggle(row)"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+</section>
+
+<div class="example-button-row">
+  <button  mat-raised-button (click)="openDialogTrailer()" mat-raised-button color="primary">Adicionar</button>
+</div>
+
+<div *ngIf="dialogTrailer">
+  <div>
+    <div class="register">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+          <mat-card fxFlex.gt-xs="40" class="mb15">
+            <mat-card-header>
+              <mat-card-title>Adicionar Reboque</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="">
+              <form class="example-form" [formGroup]="validationForm" (ngSubmit)="insertTrailer()">
+                <label>
+                  Matricula
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate  [required]="true" formControlName="plateTrailer" minLength="6" maxLength="8" type="text" class="form-control" class="form-control" id="plate" placeholder="00-AA-00">
+                </mat-form-field>
+                <label>
+                  Ano
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate formControlName="yearTrailer" [required]="true" minLength="4" maxLength="4" type="number" class="form-control" id="year"  placeholder="2000">
+                </mat-form-field>
+                <mat-dialog-content class="error">
+                  <mat-error *ngIf="plateFailed">Matricula Invalida\Já Existe!</mat-error>
+                  <mat-error *ngIf="yearFailed">Ano Invalido!</mat-error>
+                </mat-dialog-content>
+                  <div class="example-button-row">
+                    <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                  </div>
+              </form>
+              <button mat-button  (click)="closeDialogTrailer()">Fechar</button>
+            </mat-card-content>
+          </mat-card>
+      </div>
+    </div>          
+  </div>
+</div>
+<div *ngIf="editFormTrailer">
+  <div>
+    <div class="register">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+          <mat-card fxFlex.gt-xs="40" class="mb15">
+            <mat-card-header>
+              <mat-card-title>Editar Reboque</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="">
+              <label>
+                ID do Reboque
+                </label>
+              <form class="example-form" [formGroup]="validationForm" (ngSubmit)="confirmEditTrailer()">
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="trailer_id" [readonly]="true"  formControlName="id_editTrailer" minLength="6" maxLength="8" type="text"  class="form-control" id="id_editTrailer" [disabled]="true">
+                </mat-form-field>
+                <label>
+                  Matricula
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="plate_editTrailer" [required]="true" formControlName="plate_editTrailer" minLength="6" maxLength="8" type="text"  class="form-control" id="plate_editTrailer" placeholder="00-AA-00">
+                </mat-form-field>
+                <label>
+                  Ano
+                  </label>
+                <mat-form-field class="example-full-width">
+                  <input matInput mdbValidate [(ngModel)]="year_editTrailer" formControlName="year_editTrailer" [required]="true" minLength="4" maxLength="4" type="number" class="form-control" id="year_editTrailer"  placeholder="2000">
+                </mat-form-field>
+                <mat-dialog-content class="error">
+                  <mat-error *ngIf="plateFailed">Matricula Invalida\Já Existe!</mat-error>
+                  <mat-error *ngIf="yearFailed">Ano Invalido!</mat-error>
+                 </mat-dialog-content>
+                  <div class="example-button-row">
+                    <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                  </div>
+              </form>
+              <button mat-button  (click)="closeEditTrailer()">Fechar</button>
+            </mat-card-content>
+          </mat-card>
+      </div>
+    </div>          
+  </div>
+</div>

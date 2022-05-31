@@ -1,0 +1,37 @@
+<mat-toolbar color="primary" class="fix-nav">
+  <button type="button" mat-icon-button (click)="toggleSidebar()">
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <div class="nav-brand">
+    Bem vindo, {{name}}
+  </div>
+  <span class="nav-spacer"></span>
+  <form class="hidden-sm" style="margin-right: 20px; margin-top: 8px">
+    <mat-form-field style="font-size: 1rem;">
+      <input matInput placeholder="Search">
+    </mat-form-field>
+  </form>
+  <button class="hidden-sm" mat-icon-button [matMenuTriggerFor]="profile">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #profile="matMenu" [overlapTrigger]="false">
+    <button [routerLinkActive]="'active'" [routerLink]="['/profile']" mat-menu-item>
+      <mat-icon>person</mat-icon>
+      <span>Profile</span>
+    </button>
+    <button mat-menu-item [routerLinkActive]="'active'" [routerLink]="['/inBox']">
+      <mat-icon>inbox</mat-icon>
+      <span>Inbox</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+  </mat-menu>
+  <button type="button" mat-icon-button (click)="toggleMessageBar()">
+    <mat-icon aria-label="sidenav.toggle()">chat</mat-icon>
+  </button>
+  <button mat-icon-button (click)="onLoggedout()">
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+</mat-toolbar>

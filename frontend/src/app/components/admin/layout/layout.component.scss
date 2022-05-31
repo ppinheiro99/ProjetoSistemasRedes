@@ -1,0 +1,87 @@
+@import '~src/scss/variables';
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .sidenav-container {
+    flex: 1;
+    background: $main-background-color;
+    .sidenav {
+      padding: 12px;
+      width: 250px;
+      background: $white;
+    }
+    .messagersidenav{
+      padding: 4px;
+      background: $white;
+      .card_area_class{
+        height: 540px;
+        width: 270px;
+      }
+      .text_submit{
+        width: 300px;
+      }
+      .bubble {
+        border-bottom-right-radius: 20px;
+        box-sizing: border-box;
+        background: #f5f5f5;
+        border-bottom-left-radius: 20px;
+        padding-bottom: 13px;
+        margin-left: auto;
+        padding: 12px;
+        max-width: 100%;
+      }
+      .messages {
+        color: rgba(0,0,0,.87);
+        white-space: pre-wrap;
+        line-height: 1.2;
+        font-family: Muli,Helvetica Neue,Arial,sans-serif;
+        line-height: 1.4!important;
+        letter-spacing: -.1px!important;
+      }
+      .message-row {
+        padding-top: 20px;
+        margin-top: 20px;
+        padding-left: 40px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 0 16px 4px;
+        background-color: transparent;
+      }      
+    }
+    .main-container {
+      padding: 16px;
+    }
+
+    .white{
+      background-color: white;
+    }
+
+    .gray{
+      background-color: gray;
+    }
+
+    .mat-badge-content{
+      background : rgb(172, 0, 0);
+      color:green
+    }
+
+    .logged-in {
+      color: green;
+    }
+    
+    .logged-out {
+      color: red;
+    }
+    
+  }
+  
+}

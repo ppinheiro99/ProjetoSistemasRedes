@@ -1,0 +1,36 @@
+<mat-card #scrollMe style="overflow: scroll; height: y;" class="card_area_class">
+    <div class="message-row me first-of-group last-of-group ng-star-inserted" *ngFor="let msg of chat.messages">
+        <div *ngIf="msg.mine" class="bubble_sent">
+            <div class="messages_sent" >
+                {{msg.message}}
+            </div>
+        </div>
+        <div *ngIf="!msg.mine" class="bubble_received" color="primary">
+            <div class="messages" >
+                {{msg.message}}
+            </div>
+        </div>
+    </div>
+</mat-card>
+<div>
+    <form class="text_submit" [formGroup]="validationForm" (ngSubmit)="onSubmit()" >
+        <div appearance="standard" class="mat-form-field message-text mat-form-field-appearance-standard">
+            <div class="mat-form-field-wrapper">
+                <div class="mat-form-field-flex">
+                    <div class="mat-form-field-infix ">
+                        <textarea [(ngModel)]="send_message" formControlName="message" name="message" placeholder="Escreva a mensagem " class="mat-input-element mat-form-field-autofill-control cdk-textarea-autosize mat-autosize" id="mat-input-1" style="height: 18px;"></textarea>
+                    </div>
+                </div>
+                <div class="mat-form-field-underline ng-star-inserted">
+                    <span class="mat-form-field-ripple"></span>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button="" type="submit" aria-label="Send message" class="mat-focus-indicator send-message-button mat-icon-button mat-button-base">
+            <span class="mat-button-wrapper">
+                <mat-icon role="img" class="submitIcon mat-icon notranslate secondary-text material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">send</mat-icon>
+            </span>
+        </button>
+    </form>
+</div>
+

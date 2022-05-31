@@ -1,0 +1,9 @@
+<div >
+  <h1 mat-dialog-title>Dialog with elements</h1>
+  <div mat-dialog-content>This dialog showcases the title, close, content and actions elements.</div>
+  <div mat-dialog-content>
+    <div mat-dialog-content>{{data.passwordChangeData}}</div>
+    <button *ngIf="!data.passwordChangeData">Nao</button>
+    <button *ngIf="data.passwordChangeData">Sim</button>
+  </div>
+</div>

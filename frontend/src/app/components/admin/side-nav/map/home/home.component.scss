@@ -1,0 +1,57 @@
+.map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 30px;
+  }
+  
+  .map-frame {
+    border: 2px solid black;
+    height: 100%;
+  }
+ 
+  #button{
+    position: absolute;
+    top:10px;
+    color: #e71818;
+    background-color: #ffffff;
+    left:10px;
+    top: 400px;
+    z-index:99999;
+    text-align: center;
+    border-radius: 4px
+  }
+
+  #delete{
+    color: #e71818;
+    background-color: #ffffff;
+  }
+
+  #trailerStyle{
+    text-align: center;
+  }
+
+  #deleteText{
+    color: #e71818;
+  }
+
+  #addRoute{
+    color: #33b400;
+    background-color: #ffffff;
+  }
+
+  #settings{
+    position: absolute;
+    top:10px;
+    left:10px;
+    top: 500px;
+    z-index:99999;
+    text-align: center;
+    border-radius: 4px
+  }
+
+  #map {
+    height: 100%;
+  }

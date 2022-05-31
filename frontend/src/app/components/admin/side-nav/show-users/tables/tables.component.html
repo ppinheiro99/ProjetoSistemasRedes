@@ -1,0 +1,141 @@
+<section id="sample-table" class="mat-elevation-z8 bg-white">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource" matSort class="w-100">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+      <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="role_id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargo </th>
+      <td mat-cell *matCellDef="let row">
+        <div *ngIf="row.role_id == 1"> Super Admin </div>
+        <div *ngIf="row.role_id == 2"> Admin </div>
+        <div *ngIf="row.role_id == 3"> Chefe Trafego </div>
+        <div *ngIf="row.role_id == 4"> Camionista </div>
+        <div *ngIf="row.role_id == 5"> Mecanico </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="button">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button *ngIf="row.role_id > user_role_id" (click)="delete(row.ID)" mat-flat-button color="warn">Eliminar</button>
+     </td>    
+    </ng-container>
+    <ng-container matColumnDef="truckDriverMap">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row"> 
+        <button *ngIf="row.role_id == 4" (click)="truckDriverMap(row.ID)" mat-flat-button><span class="material-icons">article</span>
+        </button>
+    </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+  </table>
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</section>
+
+<div *ngIf="showDataTruckDriver">
+  <section id="sample-table" class="mat-elevation-z8 bg-white">
+    <table mat-table [dataSource]="dataSourceTruckDriver" matSort class="w-100">
+      <ng-container matColumnDef="ID">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="truck_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Camião </th>
+        <td mat-cell *matCellDef="let row"> {{row.truck_id}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="trailer_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id Reboque </th>
+        <td mat-cell *matCellDef="let row">{{row.trailer_id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="distance">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Distancia </th>
+        <td mat-cell *matCellDef="let row">{{row.distance}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tempo </th>
+        <td mat-cell *matCellDef="let row">{{row.time}}</td>
+      </ng-container>
+   
+      <ng-container matColumnDef="start_country">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> País(O) </th>
+        <td mat-cell *matCellDef="let row">{{row.start_country}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="start_city">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cidade(O) </th>
+        <td mat-cell *matCellDef="let row">{{row.start_city}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="start_postal_code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código-Postal(O)</th>
+        <td mat-cell *matCellDef="let row">{{row.start_postal_code}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="start_address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Morada(O)</th>
+        <td mat-cell *matCellDef="let row">{{row.start_address}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="end_country">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>País(D)</th>
+        <td mat-cell *matCellDef="let row">{{row.end_country}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="end_city">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cidade(D) </th>
+        <td mat-cell *matCellDef="let row">{{row.end_city}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="end_postal_code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código-Postal(D)</th>
+        <td mat-cell *matCellDef="let row">{{row.end_postal_code}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="end_address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Morada(D)</th>
+        <td mat-cell *matCellDef="let row">{{row.end_address}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsTruckDriver"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsTruckDriver;"></tr>
+
+    </table>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <button class="button" mat-button (click)="closeTruckDriverData()">Fechar</button>
+  </section>
+  <div>
+    <h5>Km que o Camionista fez: {{distance}}</h5>
+    <h5>Km da rota que o Chefe de tráfego Enviou ao Camionista: {{distance1}}</h5>
+  </div>
+  <div class="red">
+    <h5>*(O) = Origem</h5> 
+    <h5>*(D) = Destino</h5>
+  </div>
+</div>
+
+

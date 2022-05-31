@@ -1,0 +1,34 @@
+<div class="register">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+        <mat-card fxFlex.gt-xs="40" class="mb15">
+          <mat-card-header>
+            <mat-card-title>Editar Password</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="">
+            <form class="example-form" [formGroup]="validationForm" (ngSubmit)="onSubmit()">
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate formControlName="password_old" minLength="8" maxLength="25" type="password" class="form-control" id="formPasswordOld" [(ngModel)]="check_pass" placeholder="Password Antiga">
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate formControlName="password_new" minLength="8" maxLength="25" type="password" class="form-control" id="formPasswordNew" [(ngModel)]="check_pass2" placeholder="Nova Password">
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate formControlName="password_newConf" minLength="8" maxLength="25" type="password" class="form-control" id="formPasswordNewC" [(ngModel)]="check_pass3" placeholder="Nova Password Confirmação">
+              </mat-form-field>
+
+              <mat-dialog-content class="error">
+                <mat-error *ngIf="passwordFailed">Password antiga errada!</mat-error>
+                <mat-error *ngIf="newpasswordFailed || newpasswordConfFailed">Erro Password Pequena</mat-error>
+                <mat-error *ngIf="missmatchpass">Nova password nao coincide</mat-error>
+                <mat-error *ngIf="samepassword">Nova password nao pode ser igual à anterior!</mat-error>
+               </mat-dialog-content>
+
+              <div fxFlexFill>
+                <button  mat-raised-button [disabled]="oldpassword.invalid || newpassword.invalid || newpasswordC.invalid" type="submit" mat-raised-button color="primary" class="w-100">Confirmar</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+  

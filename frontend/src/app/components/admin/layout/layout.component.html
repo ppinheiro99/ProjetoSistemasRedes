@@ -1,0 +1,58 @@
+<div class="layout-container">
+  <app-top-nav (sideNavToggled)="snav.toggle()" (messageNavToggled)="msnav.toggle()"></app-top-nav>
+
+  <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="toolBarHeight">
+    <mat-sidenav #snav class="sidenav mat-elevation-z10" [(mode)]="sideNavMode" [(opened)]="sideNavOpened">
+      <app-side-nav></app-side-nav>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <main class="main-container">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+    
+    <mat-sidenav #msnav position="end" class="messagersidenav mat-elevation-z10" [(mode)]="messageSideNavMode" [(opened)]="messageSideNavOpened">
+      <mat-nav-list *ngIf="!showFiller">
+        <div *ngFor="let user of chat.users">
+          <a  *ngIf="user.userID != user_id && user.online == false"  mat-list-item (click)="toggleMessageBar(user.userID)" >
+              <mat-icon>person_pin</mat-icon>
+              <span class="logged-out">●</span>
+              {{user.userName +' '}}
+          </a>
+          <a *ngIf="user.userID != user_id && user.online == true"  mat-list-item (click)="toggleMessageBar(user.userID)" >
+            <mat-icon >person_pin</mat-icon>
+            <span class="logged-in">●</span>
+            {{user.userName}}
+        </a>
+        </div>
+      </mat-nav-list>
+      <table mat-table *ngFor="let user of chat.users">
+        <mat-nav-list *ngIf="(showFiller) && (showMessagesId == user.userID)">
+          <ng-container matColumnDef="message" >
+            <th>
+              <tr></tr>
+                <app-message-side-nav></app-message-side-nav>
+            </th>
+          </ng-container>
+          <th>
+            <tr></tr>
+            <ng-container matColumnDef="icon">
+              <tr>
+                <a (click)="toggleMessageBar(user.userID)" mat-list-item>
+                  <mat-icon  class="sidenav-icon">person_pin</mat-icon>
+                    {{user.first_name}}
+                </a>
+              </tr>
+            </ng-container>
+          </th>
+          </mat-nav-list>
+      </table>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <main class="main-container">
+      </main>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+</div>

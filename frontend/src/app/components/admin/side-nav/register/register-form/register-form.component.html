@@ -1,0 +1,54 @@
+<div class="register">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+        <mat-card fxFlex.gt-xs="40" class="mb15">
+          <mat-card-header>
+            <mat-card-title>Registo</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="">
+            <form class="example-form" [formGroup]="validationForm" (ngSubmit)="onSubmit()">
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate [required]="true" formControlName="email" minLength="8" maxLength="30" type="email" class="form-control" id="formEmail" [(ngModel)]="check_email" placeholder="Email">
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate [required]="true" formControlName="first_name" minLength="3" maxLength="20" type="text" class="form-control" id="first_name" [(ngModel)]="check_first_name" placeholder="Nome">
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate [required]="true" formControlName="last_name" minLength="3" maxLength="20" type="text" class="form-control" id="last_name" [(ngModel)]="check_last_name" placeholder="Apelido">
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <input matInput mdbValidate formControlName="address" minLength="8" maxLength="50" type="text" class="form-control" id="address" placeholder="Morada">
+              </mat-form-field>
+              <mat-select-country formControlName="country" [(ngModel)]="defaultValue" appearance="outline"
+                label="País"
+                [formControl]="countryFormControl"
+                [required]="true"
+                [itemsLoadSize]="5">
+              </mat-select-country>
+              <mat-form-field appearance="fill" class="example-full-width">
+                <mat-label>Cargo</mat-label>
+                <mat-select formControlName="role" [required]="true" disableRipple>
+                  <mat-option *ngFor="let role of roles" [value]="role.value">
+                    {{role.name}}
+                  </mat-option>
+                </mat-select>
+             </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <input matInput [required]="true" mdbValidate formControlName="password" minLength="8" maxLength="25" type="password" class="form-control" id="formPassword" [(ngModel)]="check_pass" placeholder="Password">
+              </mat-form-field>
+
+              <mat-dialog-content class="error">
+                <mat-error *ngIf="emailFailed && !passwordFailed">Email já existe!</mat-error>
+                <mat-error *ngIf="!emailFailed && passwordFailed">Erro Password Pequena</mat-error>
+                <mat-error *ngIf="emailFailed && passwordFailed">Email já existe e Password Pequena</mat-error>
+               </mat-dialog-content>
+
+              <div fxFlexFill>
+                <button  mat-raised-button [disabled]="check_pass === '' || check_first_name === '' || check_last_name === '' || check_email === '' || email.invalid || password.invalid || last_name.invalid || first_name.invalid" type="submit" mat-raised-button color="primary" class="w-100">Registar</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+  

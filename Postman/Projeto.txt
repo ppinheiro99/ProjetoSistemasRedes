@@ -1,0 +1,66 @@
+
+- GET DISTRITOS 
+	https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos
+	
+- POSTOS POR DISTRITO 
+	
+	IDDistrito 13 = PORTO 
+	TipoComb 2101 = GASÓLEO
+	IDMunicipio 194 = SANTO TIRSO 
+	
+	https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos?idsTiposComb=2101&idMarca=&idTipoPosto=&idDistrito=13&idsMunicipios=194&qtdPorPagina=50&pagina=1
+	
+- OBTER A LOCALIZAÇÃO COM BASE NAS COORDENADAS 
+	Longitude, Latitude e token 
+
+	https://api.mapbox.com/geocoding/v5/mapbox.places/-8.482706,41.344269.json?access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw
+	
+	
+- DISTÃNCIA ENTRE 2 COORDENADAS (EM METROS ) -> POSSO LOGO UTILIZAR ESTA DENTRO DO CICLO QUE PERCORRE OS DISTRITOS TODOS E VER LOGO OS MAIS PERTO (NÃO PRECISANDO ASSIM DO ENDPOINT DE CIMA -> MAS TESTAR PRIMEIRO !!!!!)
+	
+	COORDENADAS 
+	
+	WAYPOINTS - NUMERO DE "VÉRTICES"
+	
+	TOKEN
+	
+	https://api.mapbox.com/directions/v5/mapbox/driving/-8.482706,41.344269;-8.408956,41.359182?waypoints=0;1&steps=true&voice_instructions=true&banner_instructions=true&voice_units=imperial&roundabout_exits=true&access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw
+
+- PERCORRER AS BOMBAS TODAS E COMPARAR A SUA LOCALIZAÇÃO EM KM COM A LOCALIZAÇÃO DO CAMIONISTA (VER AS QUE ESTÃO NO RAIO DE KM INSERIDOS PELO UTILIZADOR) DE SEGUIDA RETORNAR AS 3 MAIS BARATAS
+
+
+EXPLICAÇÃO DETALHADA DO CÓDIGO
+
+	DGEG -> é um serviço da administração central direta do Estado que tem por missão contribuir para a conceção, promoção e avaliação das políticas relativas à energia e aos recursos geológicos, numa ótica de desenvolvimento sustentável e de garantia da segurança do abastecimento.
+
+	TIPO DE ENDPOINTS UTILIZADOS: DGEG E MAPBOX (LINKS A BAIXO)
+
+1 - CRIAR ENDPOINT COM O ID DO CAMIÃO, RAIO DE KMS MAX PRETENDIDO PARA PROCURAR UMA BOMBA DE COMBUSTIVEL E O NUMERO DE BOMBAS QUE PRETENDO QUE ME SEJAM SUGERIDAS 
+
+2 - OBTER A LOCALIZAÇÃO DO CAMIÃO 
+
+3 - OBTER O CÓDIGO DE CADA DISTRITO http.Get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos")
+
+4 - OBTER A LOCALIZAÇÃO DO CAMIÃO (DISTRITO E CONCELHO) COM BASE NAS COORDENADAS http.Get("https://api.mapbox.com/geocoding/v5/mapbox.places/long,lat.json?access_token=token") 
+
+5 - PEGAR NO CÓDIGO DO CONCELHO NO QUAL O CAMIÃO SE ENCONTRA (PARA ISSO PRECISO DO CÓDIGO DO DISTRITO) http.Get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito=" + districtCodeString)
+
+6 - OBTER TODOS OS POSTOS DE ABASTECIMENTO DO CONCELHO http.Get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos?idsTiposComb=2101&idMarca=&idTipoPosto=&idDistrito=" + districtCodeString + "&idsMunicipios=" + municipioCodeString + "&qtdPorPagina=1000&pagina=1")
+
+7 - PEGAR NO VALOR DO RAIO INSERIDO E MULTIPLICAR POR MIL (PORQUE A API RETORNA EM METROS E NÃO EM KM)
+
+8 - USER A API DA MAPBOX PARA CALCULAR A DISTANCIA ENTRE A LOCALIZAÇÃO DO CAMIÃO E CADA UM DOS POSTOS DE ABASTECIMENTO DO CONCELHO http.Get("https://api.mapbox.com/directions/v5/mapbox/driving/" + lng + "," + lat + ";" + auxLng + "," + auxLat + "?waypoints=0;1&steps=true&voice_instructions=true&banner_instructions=true&voice_units=imperial&roundabout_exits=true&access_token=token")
+
+9 - ADICIONAR TODOS AS BOMBAS DE COMBUSTÍVEL COM DISTANCIA INFERIOR AO "RAIO" A UM ARRAY DE STRUCTS (STRUCT COM OS CAMPOS PRECO, NOME, LAT,LNG, DISTANCIA, DISTRITO, LOCALIDADE E COMBUSTIVEL)
+
+10 - PEGAR NO VALOR DO NUMERO DE BOMBAR DE COMBUSTÍVEL PRETENDIDAS E FAZER UM CICLO ATÉ AO NÚMERO DE BOMBAS PRETENDIDAS, DENTRO DO CICLO VEJO QUAL É A BOMBA DE COMBUSTIVEL MAIS BARATA E ADICIONO A UM NOVO ARRAY RESULT ESSA MESMA BOMBA
+
+11 - REMOVO A BOMBA NO ARRAY "ORIGINAL"
+
+12 - APÓS O CICLO TERMINAR, JÁ TENHO NO ARRAY RESULT AS BOMBAS DE COMBUSTÍVEL MAIS BARATAS NO RAIO PRETENDIDO, RETORNO ENTÃO O ARRAY  
+
+
+
+Get new route without traffic congestion - 
+
+response4, err := http.Get("https://api.mapbox.com/directions/v5/mapbox/driving-traffic" + lng + "," + lat + ";" + auxLng + "," + auxLat + "?waypoints=0;1&steps=true&voice_instructions=true&banner_instructions=true&voice_units=imperial&roundabout_exits=true&access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw")

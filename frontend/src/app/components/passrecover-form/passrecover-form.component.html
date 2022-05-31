@@ -1,0 +1,28 @@
+<div class="login-page">
+   <div class="content px20">
+     <form [formGroup]="validationForm" (ngSubmit)="onSubmit()" class="login-form">
+       <div class="text-center">
+         <h2 class="app-name">Repor Password</h2>
+       </div>
+       <div fxLayout="row">
+         <div fxFlexFill>
+            <mat-form-field class="w-100">
+               <input matInput mdbValidate formControlName="password" minLength="10" maxLength="25" type="password" class="form-control" id="formPassword" placeholder="Password">
+             </mat-form-field>
+           <mat-form-field class="w-100">
+             <input matInput mdbValidate formControlName="confirme_password" minLength="10" maxLength="25" type="password" class="form-control" id="formPassword" placeholder="Confirme Password">
+           </mat-form-field>
+         </div>
+       </div>
+       <div fxLayout="row">
+         <div fxFlexFill>
+           <button type="submit" mat-raised-button color="primary" class="w-100">Repor</button>
+         </div>
+       </div>
+       <mat-dialog-content class="error">
+         <mat-error *ngIf="passwordChange === 'false'">Passwords inseridas são diferentes</mat-error>
+      </mat-dialog-content>
+     </form>
+   </div>
+ </div>
+ 

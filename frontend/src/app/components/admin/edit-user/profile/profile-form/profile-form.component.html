@@ -1,0 +1,41 @@
+<div class="register">
+  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+      <mat-card fxFlex.gt-xs="40" class="mb15">
+        <mat-card-header>
+          <mat-card-title>Editar Perfil</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="">
+          <form class="example-form" [formGroup]="validationForm" (ngSubmit)="onSubmit()">
+            <mat-form-field class="example-full-width">
+              <input matInput [value]="emailbd" [disabled]="true">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput mdbValidate [(ngModel)]="name" [required]="true" formControlName="first_name" minLength="3" maxLength="20" type="text" class="form-control" class="form-control" id="first_name" placeholder="Nome">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput mdbValidate formControlName="last_name" [required]="true" minLength="3" maxLength="20" type="text" class="form-control" id="lastName" [(ngModel)]="lastName" placeholder="Apelido">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput mdbValidate formControlName="address" [required]="true" minLength="3" maxLength="100" type="text" class="form-control" id="addressbd" [(ngModel)]="addressbd" placeholder="Morada">
+            </mat-form-field>
+            <mat-select-country formControlName="country" appearance="outline"
+              label="País"
+              [formControl]="countryFormControl"
+              [required]="true"
+              [(ngModel)]="defaultValue"
+              [itemsLoadSize]="5">
+            </mat-select-country>
+            <mat-dialog-content class="error">
+              <mat-error *ngIf="emailFailed">Email já existe!</mat-error>
+             </mat-dialog-content>
+              <div class="example-button-row">
+                <button  mat-raised-button [disabled]="name === '' || lastName === '' || last_name.invalid || first_name.invalid" type="submit" mat-raised-button color="primary">Editar</button>
+              </div>
+          </form>
+          <div class="example-button-row">
+            <a href="changePass" type="submit" mat-raised-button color="primary">Alterar Password</a>
+          </div>
+        </mat-card-content>
+      </mat-card>
+  </div>
+</div>

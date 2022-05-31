@@ -1,0 +1,151 @@
+<section id="sample-table" class="mat-elevation-z8 bg-white">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource" matSort class="w-100">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ID">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="latitude">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </th>
+        <td mat-cell *matCellDef="let row"> {{row.latitude}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="longitude">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </th>
+        <td mat-cell *matCellDef="let row"> {{row.longitude}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let row"> 
+          <button  class = "delete" (click)="deleteLocation(row.ID)" mat-flat-button color="warn"><span class="material-icons">
+            delete
+            </span></button>
+       </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="update">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let row"> 
+          <button class="editar"  (click)="editLocation(row.ID)" mat-flat-button  ><span class="material-icons">
+            edit
+            </span></button>
+       </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    </table>
+  
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  
+    <div class="example-button-row">
+        <button  mat-raised-button (click)="addLocation()" mat-raised-button color="primary">Adicionar</button>
+    </div>
+
+    <div *ngIf="addLocationDialog">
+        <div>
+          <div class="register">
+            <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+                <mat-card fxFlex.gt-xs="40" class="mb15">
+                  <mat-card-header>
+                    <mat-card-title>Adicionar Localização</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="">
+                    <form class="example-form" [formGroup]="validationForm" (ngSubmit)="insertLocation()">
+                      <label>
+                        Nome
+                        </label>
+                      <mat-form-field class="example-full-width">
+                        <input matInput mdbValidate  [required]="true" formControlName="name" minLength="3" maxLength="50" type="text" class="form-control" class="form-control" id="name" placeholder="nome">
+                      </mat-form-field>
+                      <label>
+                        Latitude
+                        </label>
+                      <mat-form-field class="example-full-width">
+                        <input matInput mdbValidate formControlName="latitude" [required]="true" type="number" class="form-control" id="latitude"  placeholder="Latitude">
+                      </mat-form-field>
+                      <label>
+                        Longitude
+                        </label>
+                      <mat-form-field class="example-full-width">
+                        <input matInput mdbValidate formControlName="longitude" [required]="true" minLength="1" maxLength="2" type="number" class="form-control" id="longitude"  placeholder="Longitude">
+                      </mat-form-field>
+                        <div class="example-button-row">
+                          <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                        </div>
+                    </form>
+                    <button mat-button  (click)="closeAddLocation()">Fechar</button>
+                  </mat-card-content>
+                </mat-card>
+            </div>
+          </div>               
+        </div>      
+    </div>
+
+    <div *ngIf="editForm">
+      <div>
+        <div class="register">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around stretch">
+              <mat-card fxFlex.gt-xs="40" class="mb15">
+                <mat-card-header>
+                  <mat-card-title>Editar Localização</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="">
+                  <label>
+                    ID
+                    </label>
+                  <form class="example-form" [formGroup]="validationForm" (ngSubmit)="confirmEditLocation()">
+                    <mat-form-field class="example-full-width">
+                      <input matInput mdbValidate [(ngModel)]="location_id" [readonly]="true"  formControlName="id_editLocation" type="text"  class="form-control" id="id_editLocation" [disabled]="true">
+                    </mat-form-field>
+                    <label>
+                      Nome
+                      </label>
+                    <mat-form-field class="example-full-width">
+                      <input matInput mdbValidate [(ngModel)]="name_edit" [required]="true" formControlName="name_edit" minLength="3" maxLength="50" type="text"  class="form-control" id="name_edit" placeholder="Nome">
+                    </mat-form-field>
+                    <label>
+                      Latitude
+                      </label>
+                    <mat-form-field class="example-full-width">
+                      <input matInput mdbValidate [(ngModel)]="latitude_edit" formControlName="latitude_edit" [required]="true" type="number" class="form-control" id="latitude_edit"  placeholder="Latitude">
+                    </mat-form-field>
+                    <label>
+                      Longitude
+                      </label>
+                    <mat-form-field class="example-full-width">
+                      <input matInput mdbValidate [(ngModel)]="longitude_edit" formControlName="longitude_edit" [required]="true" type="number" class="form-control" id="longitude_edit"  placeholder="Longitude>">
+                    </mat-form-field>
+                      <div class="example-button-row">
+                        <button  mat-raised-button  type="submit" mat-raised-button color="primary">Submeter</button>
+                      </div>
+                  </form>
+                  <button mat-button  (click)="closeEdit()">Fechar</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+        </div>
+                
+      </div>
+      
+      </div>
+  </section>

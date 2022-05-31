@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "5cb16a09-eb32-408d-9732-e881f16d86c6",
+		"name": "Projeto Aplicações Web APIS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17170954"
+	},
+	"item": [
+		{
+			"name": "getDistritos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos",
+					"protocol": "https",
+					"host": [
+						"precoscombustiveis",
+						"dgeg",
+						"gov",
+						"pt"
+					],
+					"path": [
+						"api",
+						"PrecoComb",
+						"GetDistritos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostosPorDistrito",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos?idsTiposComb=2101&idMarca=&idTipoPosto=&idDistrito=13&idsMunicipios=194&qtdPorPagina=1000&pagina=1",
+					"protocol": "https",
+					"host": [
+						"precoscombustiveis",
+						"dgeg",
+						"gov",
+						"pt"
+					],
+					"path": [
+						"api",
+						"PrecoComb",
+						"PesquisarPostos"
+					],
+					"query": [
+						{
+							"key": "idsTiposComb",
+							"value": "2101"
+						},
+						{
+							"key": "idMarca",
+							"value": ""
+						},
+						{
+							"key": "idTipoPosto",
+							"value": ""
+						},
+						{
+							"key": "idDistrito",
+							"value": "13"
+						},
+						{
+							"key": "idsMunicipios",
+							"value": "194"
+						},
+						{
+							"key": "qtdPorPagina",
+							"value": "1000"
+						},
+						{
+							"key": "pagina",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetLocalizacaoComCoords",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.mapbox.com/geocoding/v5/mapbox.places/-8.473233,41.350411.json?access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mapbox",
+						"com"
+					],
+					"path": [
+						"geocoding",
+						"v5",
+						"mapbox.places",
+						"-8.473233,41.350411.json"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DistanciaEntre2Coords",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.mapbox.com/directions/v5/mapbox/driving/-8.482706,41.344269;-8.408956,41.359182?waypoints=0;1&steps=true&voice_instructions=true&banner_instructions=true&voice_units=imperial&roundabout_exits=true&access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mapbox",
+						"com"
+					],
+					"path": [
+						"directions",
+						"v5",
+						"mapbox",
+						"driving",
+						"-8.482706,41.344269;-8.408956,41.359182"
+					],
+					"query": [
+						{
+							"key": "waypoints",
+							"value": "0;1"
+						},
+						{
+							"key": "steps",
+							"value": "true"
+						},
+						{
+							"key": "voice_instructions",
+							"value": "true"
+						},
+						{
+							"key": "banner_instructions",
+							"value": "true"
+						},
+						{
+							"key": "voice_units",
+							"value": "imperial"
+						},
+						{
+							"key": "roundabout_exits",
+							"value": "true"
+						},
+						{
+							"key": "access_token",
+							"value": "pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NewRouteWithoutTraffic",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/-8.611837,41.172695;-8.30752,41.374665?waypoints=0;1&steps=true&voice_instructions=true&banner_instructions=true&voice_units=imperial&roundabout_exits=true&access_token=pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mapbox",
+						"com"
+					],
+					"path": [
+						"directions",
+						"v5",
+						"mapbox",
+						"driving-traffic",
+						"-8.611837,41.172695;-8.30752,41.374665"
+					],
+					"query": [
+						{
+							"key": "waypoints",
+							"value": "0;1"
+						},
+						{
+							"key": "steps",
+							"value": "true"
+						},
+						{
+							"key": "voice_instructions",
+							"value": "true"
+						},
+						{
+							"key": "banner_instructions",
+							"value": "true"
+						},
+						{
+							"key": "voice_units",
+							"value": "imperial"
+						},
+						{
+							"key": "roundabout_exits",
+							"value": "true"
+						},
+						{
+							"key": "access_token",
+							"value": "pk.eyJ1IjoicHBpbmhlaXJvOTkiLCJhIjoiY2tvbXI3N3NuMXIzejJxcm1uZTJxOWlmYyJ9.kJ7suLcfyHd8DBr34XygRw"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
