@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gestaoFrota/model"
 	"github.com/gestaoFrota/routes"
@@ -149,9 +150,9 @@ func main() {
 		auth.POST("/changePassword", routes.ChangePassword)
 		auth.PUT("/refresh_token", services.AuthorizationRequired(), routes.RefreshToken)
 	}
-	//port := os.Getenv("PORT")
-	router.Run(":80")
-	//router.Run(":" + port)
+	port := os.Getenv("PORT")
+	//router.Run(":80")
+	router.Run(":" + port)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 }
